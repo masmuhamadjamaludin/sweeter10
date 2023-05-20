@@ -6,34 +6,23 @@ from pymongo import MongoClient
 import jwt
 from datetime import datetime, timedelta
 import hashlib
-
-from flask import (Flask, 
-                   render_template,
-                   jsonify,
-                   redirect,
-                   request,
-                   url_for
-                   )
+from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
-
 
 app = Flask(__name__)
 
-app.config['TEMPLATES_AUTO_RELOAD']=True
-app.config['UPLOAD_FOLDER'] = './static/profile_pics'
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = "SPARTA"
 
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
+MONGODB_CONNECTION_STRING = "mongodb://jamal:jamal@ac-qxx6olp-shard-00-00.lbomoax.mongodb.net:27017,ac-qxx6olp-shard-00-01.lbomoax.mongodb.net:27017,ac-qxx6olp-shard-00-02.lbomoax.mongodb.net:27017/?ssl=true&replicaSet=atlas-2kj0jp-shard-0&authSource=admin&retryWrites=true&w=majori"
 
-MONGODB_URI = os.environ.get("MONGODB_URI")
-DB_NAME =  os.environ.get("DB_NAME")
+client = MongoClient(MONGODB_CONNECTION_STRING)
+db = client.dbsparta_plus_week4
 
-client = MongoClient(MONGODB_URI)
-db = client[DB_NAME]
+TOKEN_KEY = 'mytoken'
 
-TOKEN_KEY = os.environ.get("TOKEN_KEY")
 @app.route('/', methods=['GET'])
 def index():
     token_receive = request.cookies.get(TOKEN_KEY)
